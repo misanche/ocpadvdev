@@ -25,7 +25,29 @@ echo "Setting up Nexus in project $GUID-nexus"
 #   sleep 10
 # done
 
+# go to project
+oc project ${GUID}-nexus
+
+# Import nexus Imagestream
+oc import-image nexus3 --from=sonatype/nexus3 --confirm
+
+# tag the image
+oc tag sonatype/nexus3 ${GUID}-nexus/nexus3:latest
+
 # Ideally just calls a template
-# oc new-app -f ../templates/nexus.yaml --param .....
+oc new-app -f ./Infrastructure/templates/nexus.yaml
 
 # To be Implemented by Student
+
+#Check until is up
+while : ; do
+    echo "Checking if Nexus is Ready..."
+    oc get pod -n ${GUID}-nexus|grep '\-1\-'|grep -v deploy|grep "1/1"
+    [[ "$?" == "1" ]] || break
+    echo "...no. Sleeping 10 seconds."
+    sleep 10
+done
+
+echo "configure now"
+chmod +x ./Infrastructure/bin/nexus_configuration.sh
+./Infrastructure/bin/nexus_configuration.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
