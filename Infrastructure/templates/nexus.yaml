@@ -25,6 +25,25 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
+    creationTimestamp: null
+    labels:
+      app: nexus3
+    name: nexus-registry
+  spec:
+    ports:
+    - port: 5000
+      protocol: TCP
+      targetPort: 5000
+    selector:
+      app: nexus3
+      deploymentconfig: nexus3
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp: null
@@ -150,6 +169,35 @@ objects:
   kind: Route
   metadata:
     annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: nexus3
+    name: nexus-registry
+  spec:
+    host: nexus-registry-7077-nexus.apps.na39.openshift.opentlc.com
+    port:
+      targetPort: 5000
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: nexus-registry
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-08-20T11:22:21Z
+        status: "True"
+        type: Admitted
+      host: nexus-registry-7077-nexus.apps.na39.openshift.opentlc.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
       openshift.io/generated-by: OpenShiftNewApp
       openshift.io/host.generated: "true"
     creationTimestamp: null
@@ -179,14 +227,24 @@ objects:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
-      openshift.io/image.dockerRepositoryCheck: 2018-08-20T10:05:42Z
+      openshift.io/image.dockerRepositoryCheck: 2018-08-20T10:33:14Z
     creationTimestamp: null
-    generation: 2
+    generation: 14
     labels:
       app: nexus3
     name: nexus3
   spec:
     lookupPolicy:
       local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/7077-nexus/nexus3:latest
+      generation: 14
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
   status:
     dockerImageRepository: ""
