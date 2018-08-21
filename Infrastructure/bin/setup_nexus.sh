@@ -29,10 +29,10 @@ echo "Setting up Nexus in project $GUID-nexus"
 oc project ${GUID}-nexus
 
 # Import nexus Imagestream
-oc import-image nexus3 --from=sonatype/nexus3 --confirm
+#oc import-image nexus3 --from=sonatype/nexus3 --confirm
 
 # tag the image
-oc tag sonatype/nexus3 ${GUID}-nexus/nexus3:latest
+#oc tag sonatype/nexus3 ${GUID}-nexus/nexus3:latest
 
 # Ideally just calls a template
 oc new-app -f ./Infrastructure/templates/nexus.yaml

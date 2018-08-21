@@ -7,11 +7,6 @@ objects:
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftNewApp
-      pv.kubernetes.io/bind-completed: "yes"
-      pv.kubernetes.io/bound-by-controller: "yes"
-    creationTimestamp: null
     labels:
       app: jenkins-persistent
       template: jenkins-persistent-template
@@ -22,8 +17,6 @@ objects:
     resources:
       requests:
         storage: 4Gi
-    volumeName: vol301
-  status: {}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -163,16 +156,6 @@ objects:
             claimName: jenkins
     test: false
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - jenkins
-        from:
-          kind: ImageStreamTag
-          name: jenkins:2
-          namespace: openshift
-      type: ImageChange
-    - type: ConfigChange
   status:
     availableReplicas: 0
     latestVersion: 0
