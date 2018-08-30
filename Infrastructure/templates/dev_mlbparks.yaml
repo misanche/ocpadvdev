@@ -1,0 +1,229 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: mlbparks
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The web server's http port.
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: eap70-basic-s2i
+      application: mlbparks
+      template: eap70-basic-s2i
+      xpaas: 1.4.8
+    name: mlbparks
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentConfig: mlbparks
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The JGroups ping port for clustering.
+      openshift.io/generated-by: OpenShiftNewApp
+      service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+    creationTimestamp: null
+    labels:
+      app: eap70-basic-s2i
+      application: mlbparks
+      template: eap70-basic-s2i
+      xpaas: 1.4.8
+    name: mlbparks-ping
+  spec:
+    clusterIP: None
+    ports:
+    - name: ping
+      port: 8888
+      protocol: TCP
+      targetPort: 8888
+    selector:
+      deploymentConfig: mlbparks
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: eap70-basic-s2i
+      application: mlbparks
+      template: eap70-basic-s2i
+      xpaas: 1.4.8
+    name: mlbparks
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      deploymentConfig: mlbparks
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: eap70-basic-s2i
+          application: mlbparks
+          deploymentConfig: mlbparks
+        name: mlbparks
+      spec:
+        containers:
+        - env:
+          - name: JGROUPS_PING_PROTOCOL
+            value: openshift.DNS_PING
+          - name: OPENSHIFT_DNS_PING_SERVICE_NAME
+            value: mlbparks-ping
+          - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+            value: "8888"
+          - name: MQ_CLUSTER_PASSWORD
+            value: 6KDvYdBR
+          - name: MQ_QUEUES
+          - name: MQ_TOPICS
+          - name: JGROUPS_CLUSTER_PASSWORD
+            value: XpBIMUjl
+          - name: AUTO_DEPLOY_EXPLODED
+            value: "false"
+          image: docker-registry.default.svc:5000/7077-parks-dev/mlbparks@sha256:4798df9d542cc8a91d17da1140480819d2df9e9b869bc3c5b909072b626e566e
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/livenessProbe.sh
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: mlbparks
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8888
+            name: ping
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/readinessProbe.sh
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 75
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - mlbparks
+        from:
+          kind: ImageStreamTag
+          name: mlbparks:latest
+          namespace: 7077-parks-dev
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for application's http service.
+      openshift.io/generated-by: OpenShiftNewApp
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: eap70-basic-s2i
+      application: mlbparks
+      template: eap70-basic-s2i
+      xpaas: 1.4.8
+    name: mlbparks
+  spec:
+    host: mlbparks-7077-parks-dev.apps.na39.openshift.opentlc.com
+    to:
+      kind: Service
+      name: mlbparks
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-08-22T07:00:33Z
+        status: "True"
+        type: Admitted
+      host: mlbparks-7077-parks-dev.apps.na39.openshift.opentlc.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: eap70-basic-s2i
+      application: mlbparks
+      template: eap70-basic-s2i
+      xpaas: 1.4.8
+    name: mlbparks
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/7077-parks-dev/mlbparks:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""

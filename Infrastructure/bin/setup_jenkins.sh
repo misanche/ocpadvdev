@@ -29,7 +29,38 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 # To be Implemented by Student
 # Go to Jenkins project
 oc project ${GUID}-jenkins
+# Add roles to jenkins user in ${GUID}-jenkins
+oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-jenkins
 # Create the Jenkins app
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
 # Create custom Jenkins Slave pod
 cat ./Dockerfile | oc new-build --name=jenkins-slave-appdev --dockerfile=-
+
+while : ; do
+    echo "Checking if Jenkins is Ready..."
+    oc get pod -n ${GUID}-jenkins|grep '\-1\-'|grep -v deploy|grep "1/1"
+    [[ "$?" == "1" ]] || break
+    echo "...no. Sleeping 10 seconds."
+    sleep 10
+done
+#echo "Create pipelines for mlbparks, nationalparks and parksmap"
+#oc create -f ./Infrastructure/templates/pipelines/mlbparks-pipeline.yaml 
+#oc create -f ./Infrastructure/templates/pipelines/nationalparks-pipeline.yaml 
+#oc create -f ./Infrastructure/templates/pipelines/parksmap-pipeline.yaml 
+
+echo "Set new pipelines based on ${REPO} - ${GUID} - ${CLUSTER}"
+# Don't know why env vars are not created automatically
+oc new-build ${REPO} --name=mlbpark-pipeline --strategy=pipeline --context-dir=./MLBParks -l app=pipeline
+oc env bc/mlbpark-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
+oc cancel-build mlbpark-pipeline-1
+oc new-build ${REPO} --name=nationalparks-pipeline --strategy=pipeline --context-dir=./NationalParks -l app=pipeline
+oc env bc/nationalparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
+oc cancel-build nationalparks-pipeline-1
+oc new-build ${REPO} --name=parksmap-pipeline --strategy=pipeline --context-dir=./ParksMap -l app=pipeline
+oc env bc/parksmap-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
+oc cancel-build parksmap-pipeline-1
+
+
+
+
+
