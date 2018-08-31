@@ -29,7 +29,7 @@ oc new-build --binary=true --allow-missing-images=true --image-stream=jboss-eap7
 #  Create mlbparks-configmap
 oc create configmap mlbparks-configmap --from-literal APPNAME="MLB Parks (Dev)"
 # Create mlbparks app.
-oc new-app -l app=mlbparks --image-stream=7077-parks-dev/mlbparks:latest --allow-missing-imagestream-tags=true --name=mlbparks
+oc new-app -l app=mlbparks --image-stream=${GUID}-parks-dev/mlbparks:latest --allow-missing-imagestream-tags=true --name=mlbparks
 # Update environment vars
 oc set env dc/mlbparks --from=configmap/mlbparks-configmap
 oc set env dc/mlbparks --from=configmap/mongodb-configmap
@@ -48,7 +48,7 @@ oc new-build --binary=true --allow-missing-images=true --image-stream=redhat-ope
 # Create configmap
 oc create configmap nationalparks-configmap --from-literal APPNAME="National Parks (Dev)"
 # Create Nationalparks app
-oc new-app -l app=nationalparks --image-stream=7077-parks-dev/nationalparks:latest --allow-missing-imagestream-tags=true --name=nationalparks
+oc new-app -l app=nationalparks --image-stream=${GUID}-parks-dev/nationalparks:latest --allow-missing-imagestream-tags=true --name=nationalparks
 # Modify dc with configmap values
 oc set env dc/nationalparks --from=configmap/nationalparks-configmap
 oc set env dc/nationalparks --from=configmap/mongodb-configmap
@@ -68,7 +68,7 @@ oc new-build --name=parksmap --image-stream=redhat-openjdk18-openshift:1.2 --all
 # Create configmap
 oc create configmap parksmap-configmap --from-literal APPNAME="ParksMap (Dev)"
 # Create new app
-oc new-app --image-stream=7077-parks-dev/parksmap:latest --allow-missing-imagestream-tags --name=parksmap -l app=parksmap
+oc new-app --image-stream=${GUID}-parks-dev/parksmap:latest --allow-missing-imagestream-tags --name=parksmap -l app=parksmap
 # Set env vars from configmap
 oc set env dc/parksmap --from=configmap/parksmap-configmap
 # Remove triggers
