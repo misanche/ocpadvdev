@@ -22,7 +22,6 @@ objects:
     resources:
       requests:
         storage: 1Gi
-    volumeName: vol313
   status: {}
 - apiVersion: v1
   kind: Service
