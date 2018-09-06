@@ -47,6 +47,12 @@ podTemplate(
         echo "Building version ${devTag}"
         sh "${mvnCmd} clean package -DskipTests"
       }
+      // Using Maven run the unit tests
+      stage('Unit Tests') {
+        echo "Running Unit Tests"
+
+        sh "${mvnCmd} test"
+      }
     }
 
  
