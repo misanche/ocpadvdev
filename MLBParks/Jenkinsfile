@@ -20,6 +20,35 @@ podTemplate(
     // You need to build the application in directory `MLBParks`.
     // Also copy "../nexus_settings.xml" to your build directory
     // and replace 'GUID' in the file with your ${GUID} to point to >your< Nexus instance
+    def mvnCmd = "mvn -s ./nexus_settings.xml"
+
+    // Checkout Source Code
+    stage('Checkout Source') {
+      git "https://github.com/misanche/ocpadvdev.git"
+    }
+
+    echo "Copy nexus_settings.xml to current directoy"
+    sh "cp ./nexus_settings.xml MLBParks/nexus_settings.xml"
+    echo "Replace GUID string with current ${GUID}"
+    sh "sed -i -- 's/GUID/${GUID}/g' MLBParks/nexus_settings.xml"
+
+    echo "Change Folder to > MLBParks"
+    dir ('MLBParks') {
+      // Set the tag for the development image: version + build number
+      def version = getVersionFromPom("pom.xml")
+      def app = getArtifactIdFromPom("pom.xml")
+      def devTag  = "${version}-${BUILD_NUMBER}"
+      // Set the tag for the production image: version
+      def prodTag = "${version}"
+
+      // Using Maven build the war file
+      // Do not run tests in this step
+      stage('Build war') {
+        echo "Building version ${devTag}"
+        sh "${mvnCmd} clean package -DskipTests"
+      }
+    }
+
  
   }
 }
