@@ -53,6 +53,13 @@ podTemplate(
 
         sh "${mvnCmd} test"
       }
+
+      stage('Code Analysis') {
+        echo "Running Code Analysis"
+
+        // Replace xyz-sonarqube with the name of your Sonarqube project
+        sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${GUID}-sonarqube.apps.na39.openshift.opentlc.com/ -Dsonar.projectName=${app}-${devTag}"
+      }
     }
 
  
