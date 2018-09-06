@@ -40,6 +40,7 @@ podTemplate(
       def devTag  = "${version}-${BUILD_NUMBER}"
       // Set the tag for the production image: version
       def prodTag = "${version}"
+      def devNamespace = "${GUID}-parks-dev"
 
       // Using Maven build the war file
       // Do not run tests in this step
@@ -66,6 +67,23 @@ podTemplate(
 
         // Replace xyz-nexus with the name of your Nexus project
         sh "${mvnCmd} deploy -DskipTests=true -DaltDeploymentRepository=nexus::default::http://nexus3-${GUID}-nexus.apps.na39.openshift.opentlc.com/repository/releases"
+      }
+
+      // Build the OpenShift Image in OpenShift and tag it.
+      stage('Build and Tag OpenShift Image') {
+        echo "Building OpenShift container image mlbparks:${devTag}"
+
+        // Start Binary Build in OpenShift using the file we just published
+        // The filename is openshift-tasks.war in the 'target' directory of your current
+        // Jenkins workspace
+        // Replace xyz-tasks-dev with the name of your dev project
+        sh "oc start-build mlbparks --follow --from-file=./target/mlbparks.war -n ${devNamespace}"
+
+        // OR use the file you just published into Nexus:
+        // sh "oc start-build tasks --follow --from-file=http://nexus3.${GUID}-nexus.svc.cluster.local:8081/repository/releases/org/jboss/quickstarts/eap/mlbparks/${version}/mlbparks-${version}.war -n ${devNamespace}"
+
+        // Tag the image using the devTag
+        openshiftTag alias: 'false', destStream: 'mlbparks', destTag: devTag, destinationNamespace: devNamespace, namespace: devNamespace, srcStream: 'mlbparks', srcTag: 'latest', verbose: 'false'
       }
     }
 
