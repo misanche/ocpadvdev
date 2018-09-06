@@ -60,6 +60,13 @@ podTemplate(
         // Replace xyz-sonarqube with the name of your Sonarqube project
         sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${GUID}-sonarqube.apps.na39.openshift.opentlc.com/ -Dsonar.projectName=${app}-${devTag}"
       }
+
+      stage('Publish to Nexus') {
+        echo "Publish to Nexus"
+
+        // Replace xyz-nexus with the name of your Nexus project
+        sh "${mvnCmd} deploy -DskipTests=true -DaltDeploymentRepository=nexus::default::http://nexus3-${GUID}-nexus.apps.na39.openshift.opentlc.com/repository/releases"
+      }
     }
 
  
