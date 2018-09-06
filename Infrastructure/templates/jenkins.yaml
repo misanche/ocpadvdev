@@ -187,11 +187,3 @@ objects:
       weight: 100
     wildcardPolicy: None
   status:
-    ingress:
-    - conditions:
-      - lastTransitionTime: 2018-08-20T08:29:22Z
-        status: "True"
-        type: Admitted
-      host: jenkins-7077-jenkins.apps.na39.openshift.opentlc.com
-      routerName: router
-      wildcardPolicy: None
