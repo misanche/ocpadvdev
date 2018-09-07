@@ -17,7 +17,7 @@ echo "Setting up Parks Development Environment in project ${GUID}-parks-dev"
 oc project ${GUID}-parks-dev
 
 echo "Set Permissions"
-oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-jenkins
+oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-parks-dev
 oc policy add-role-to-user view --serviceaccount=default
 echo "Create mongodb from template"
 oc new-app -f ./Infrastructure/templates/mongodb_dev.yaml
