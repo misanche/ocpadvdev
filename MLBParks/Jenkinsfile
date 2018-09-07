@@ -147,6 +147,14 @@ podTemplate(
         openshiftVerifyService namespace: prodNamespace, svcName: destApp, verbose: 'false'
       }
 
+      stage('Switch over to new Version') {
+        input "Switch Production?"
+
+        echo "Switching Production application to ${destApp}."
+        // Replace xyz-tasks-prod with the name of your production project
+        sh 'oc patch route mlbparks -n ' + prodNamespace + ' -p \'{"spec":{"to":{"name":"' + destApp + '"}}}\''
+      }
+
     }
 
  
