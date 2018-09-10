@@ -51,9 +51,9 @@ done
 
 echo "Set new pipelines based on ${REPO} - ${GUID} - ${CLUSTER}"
 # Don't know why env vars are not created automatically
-oc new-build ${REPO} --name=mlbpark-pipeline --strategy=pipeline --context-dir=./MLBParks -l app=pipeline
-oc env bc/mlbpark-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
-oc cancel-build mlbpark-pipeline-1
+oc new-build ${REPO} --name=mlbparks-pipeline --strategy=pipeline --context-dir=./MLBParks -l app=pipeline
+oc env bc/mlbparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
+oc cancel-build mlbparks-pipeline-1
 oc new-build ${REPO} --name=nationalparks-pipeline --strategy=pipeline --context-dir=./Nationalparks -l app=pipeline
 oc env bc/nationalparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
 oc cancel-build nationalparks-pipeline-1
