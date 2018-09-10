@@ -9,6 +9,8 @@ fi
 GUID=$1
 echo "Setting up Nexus in project $GUID-nexus"
 
+echo "Add roles"
+oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-nexus
 # Code to set up the Nexus. It will need to
 # * Create Nexus
 # * Set the right options for the Nexus Deployment Config

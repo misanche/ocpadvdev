@@ -39,7 +39,7 @@ cat ./Dockerfile | oc new-build --name=jenkins-slave-appdev --dockerfile=- -n ${
 
 while : ; do
     echo "Checking if Jenkins is Ready..."
-    oc get pod -n ${GUID}-jenkins | jenkins $1 | grep -v build | grep -v deploy |grep "1/1.*Running"
+    oc get pod -n ${GUID}-jenkins | jenkins | grep -v build | grep -v deploy |grep "1/1.*Running"
     [[ "$?" == "1" ]] || break
     echo "...no. Sleeping 10 seconds."
     sleep 10
