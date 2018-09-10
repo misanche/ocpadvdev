@@ -148,7 +148,8 @@ podTemplate(
       }
 
       stage('Switch over to new Version') {
-        input "Switch Production?"
+        // Don't ask now
+        // input "Switch Production?"
 
         echo "Switching Production application to ${destApp}."
         // Replace xyz-tasks-prod with the name of your production project
