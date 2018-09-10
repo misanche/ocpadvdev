@@ -53,7 +53,7 @@ echo "Set new pipelines based on ${REPO} - ${GUID} - ${CLUSTER}"
 oc new-build ${REPO} --name=mlbpark-pipeline --strategy=pipeline --context-dir=./MLBParks -l app=pipeline
 oc env bc/mlbpark-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
 oc cancel-build mlbpark-pipeline-1
-oc new-build ${REPO} --name=nationalparks-pipeline --strategy=pipeline --context-dir=./NationalParks -l app=pipeline
+oc new-build ${REPO} --name=nationalparks-pipeline --strategy=pipeline --context-dir=./Nationalparks -l app=pipeline
 oc env bc/nationalparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
 oc cancel-build nationalparks-pipeline-1
 oc new-build ${REPO} --name=parksmap-pipeline --strategy=pipeline --context-dir=./ParksMap -l app=pipeline
