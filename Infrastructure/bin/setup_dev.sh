@@ -41,7 +41,7 @@ oc expose dc mlbparks --port 8080 -n ${GUID}-parks-dev
 # Expose the svc
 oc expose svc mlbparks --labels="type=parksmap-backend" -n ${GUID}-parks-dev
 # Set readiness and liveness probes
-oc set probe dc/mlbparks --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-dev
+oc set probe dc/mlbparks --liveness --failure-threshold=4 -n ${GUID}-parks-dev --initial-delay-seconds=35 -- echo ok
 oc set probe dc/mlbparks --readiness --get-url=http://:8080/ws/healthz/ --failure-threshold=4 --initial-delay-seconds=60 -n ${GUID}-parks-dev
 
 echo "Create Nationalparks"
@@ -60,7 +60,7 @@ oc expose dc nationalparks --port 8080 -n ${GUID}-parks-dev
 # Expose svc
 oc expose svc nationalparks -l "type=parksmap-backend" -n ${GUID}-parks-dev
 # Liveness and probes 
-oc set probe dc/nationalparks --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-dev
+oc set probe dc/nationalparks --liveness --failure-threshold=4 -n ${GUID}-parks-dev --initial-delay-seconds=35 -- echo ok
 oc set probe dc/nationalparks --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url='http://:8080/ws/healthz/' -n ${GUID}-parks-dev
 
 echo "Create ParksMap"
@@ -75,7 +75,7 @@ oc set env dc/parksmap --from=configmap/parksmap-configmap -n ${GUID}-parks-dev
 # Remove triggers
 oc set triggers dc/parksmap --remove-all -n ${GUID}-parks-dev
 # Setup liveness probes
-oc set probe dc/parksmap --liveness --initial-delay-seconds=35 --failure-threshold=4 -- echo ok -n ${GUID}-parks-dev
+oc set probe dc/parksmap --liveness --initial-delay-seconds=35 -n ${GUID}-parks-dev --failure-threshold=4 -- echo ok
 oc set probe dc/parksmap --readiness --initial-delay-seconds=60 --failure-threshold=4 --get-url='http://:8080/ws/healthz/' -n ${GUID}-parks-dev
 # Expose dc and routes
 oc expose dc parksmap --port 8080 -n ${GUID}-parks-dev

@@ -64,7 +64,7 @@ oc set env dc/mlbparks-green --from=configmap/mongodb-configmap -n ${GUID}-parks
 oc set env dc/mlbparks-green --from=configmap/mlbparks-green-configmap -n ${GUID}-parks-prod
 oc patch dc/mlbparks-green -p='{"spec": {"strategy": {"type": "Recreate"}}}' -n ${GUID}-parks-prod
 oc expose dc mlbparks-green --port 8080 -n ${GUID}-parks-prod
-oc set probe dc/mlbparks-green --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/mlbparks-green --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/mlbparks-green --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
 
 
@@ -76,7 +76,7 @@ oc set env dc/mlbparks-blue --from=configmap/mongodb-configmap -n ${GUID}-parks-
 oc set env dc/mlbparks-blue --from=configmap/mlbparks-blue-configmap -n ${GUID}-parks-prod
 oc patch dc/mlbparks-blue -p '{"spec": {"strategy": {"type": "Recreate"}}}' -n ${GUID}-parks-prod
 oc expose dc mlbparks-blue --port 8080 -n ${GUID}-parks-prod
-oc set probe dc/mlbparks-blue --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/mlbparks-blue --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok 
 oc set probe dc/mlbparks-blue --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
 
 echo "Create National Parks"
@@ -88,7 +88,7 @@ oc rollout cancel dc/nationalparks-green -n ${GUID}-parks-prod
 oc set env dc/nationalparks-green --from=configmap/mongodb-configmap -n ${GUID}-parks-prod
 oc set env dc/nationalparks-green --from=configmap/nationalparks-green-configmap -n ${GUID}-parks-prod
 oc expose dc nationalparks-green --port 8080 -n ${GUID}-parks-prod
-oc set probe dc/nationalparks-green --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/nationalparks-green --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/nationalparks-green --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
 echo "Create Blue"
 oc new-app ${GUID}-parks-prod/nationalparks:0.0  -l app=nationalparks-blue --allow-missing-imagestream-tags=true --allow-missing-images=true --name=nationalparks-blue -n ${GUID}-parks-prod
@@ -98,7 +98,7 @@ oc rollout cancel dc/nationalparks-blue -n ${GUID}-parks-prod
 oc set env dc/nationalparks-blue --from=configmap/mongodb-configmap -n ${GUID}-parks-prod
 oc set env dc/nationalparks-blue --from=configmap/nationalparks-blue-configmap -n ${GUID}-parks-prod
 oc expose dc nationalparks-blue --port 8080 -n ${GUID}-parks-prod
-oc set probe dc/nationalparks-blue --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/nationalparks-blue --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/nationalparks-blue --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
 
 echo "Create ParksMap"
@@ -110,7 +110,7 @@ oc rollout cancel dc/parksmap-green -n ${GUID}-parks-prod
 oc set env dc/parksmap-green --from=configmap/mongodb-configmap -n ${GUID}-parks-prod
 oc set env dc/parksmap-green --from=configmap/parksmap-green-configmap -n ${GUID}-parks-prod
 oc expose dc parksmap-green --port 8080 -n ${GUID}-parks-prod
-oc set probe dc/parksmap-green --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/parksmap-green --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/parksmap-green --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
 echo "Create Blue"
 oc new-app ${GUID}-parks-prod/parksmap:0.0  -l app=parksmap-blue --allow-missing-imagestream-tags=true --allow-missing-images=true --name=parksmap-blue -n ${GUID}-parks-prod
@@ -120,7 +120,7 @@ oc rollout cancel dc/parksmap-blue -n ${GUID}-parks-prod
 oc set env dc/parksmap-blue --from=configmap/mongodb-configmap -n ${GUID}-parks-prod
 oc set env dc/parksmap-blue --from=configmap/parksmap-blue-configmap -n ${GUID}-parks-prod
 oc expose dc parksmap-blue --port 8080 -n ${GUID}-parks-prod
-oc set probe dc/parksmap-blue --liveness --failure-threshold=4 --initial-delay-seconds=35 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/parksmap-blue --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/parksmap-blue --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
 
 echo "Expose Green Services"
