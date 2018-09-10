@@ -25,9 +25,6 @@ echo "Setting up Nexus in project $GUID-nexus"
 #   sleep 10
 # done
 
-# go to project
-oc project ${GUID}-nexus
-
 # Import nexus Imagestream
 #oc import-image nexus3 --from=sonatype/nexus3 --confirm
 
@@ -35,7 +32,7 @@ oc project ${GUID}-nexus
 #oc tag sonatype/nexus3 ${GUID}-nexus/nexus3:latest
 
 # Ideally just calls a template
-oc new-app -f ./Infrastructure/templates/nexus.yaml
+oc new-app -f ./Infrastructure/templates/nexus.yaml -n ${GUID}-nexus
 
 # To be Implemented by Student
 

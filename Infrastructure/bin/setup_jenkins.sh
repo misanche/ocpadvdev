@@ -31,11 +31,11 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 oc project ${GUID}-jenkins
 # Add roles to jenkins user in ${GUID}-jenkins
 oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-jenkins
-oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins
+oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-jenkins
 # Create the Jenkins app
-oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
+oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
 # Create custom Jenkins Slave pod
-cat ./Dockerfile | oc new-build --name=jenkins-slave-appdev --dockerfile=-
+cat ./Dockerfile | oc new-build --name=jenkins-slave-appdev --dockerfile=- -n ${GUID}-jenkins
 
 while : ; do
     echo "Checking if Jenkins is Ready..."
@@ -51,15 +51,15 @@ done
 
 echo "Set new pipelines based on ${REPO} - ${GUID} - ${CLUSTER}"
 # Don't know why env vars are not created automatically
-oc new-build ${REPO} --name=mlbparks-pipeline --strategy=pipeline --context-dir=./MLBParks -l app=pipeline
-oc env bc/mlbparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
-oc cancel-build mlbparks-pipeline-1
-oc new-build ${REPO} --name=nationalparks-pipeline --strategy=pipeline --context-dir=./Nationalparks -l app=pipeline
-oc env bc/nationalparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
-oc cancel-build nationalparks-pipeline-1
-oc new-build ${REPO} --name=parksmap-pipeline --strategy=pipeline --context-dir=./ParksMap -l app=pipeline
-oc env bc/parksmap-pipeline GUID=${GUID} CLUSTER=${CLUSTER}
-oc cancel-build parksmap-pipeline-1
+oc new-build ${REPO} --name=mlbparks-pipeline --strategy=pipeline --context-dir=./MLBParks -l app=pipeline -n ${GUID}-jenkins
+oc env bc/mlbparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER} -n ${GUID}-jenkins
+oc cancel-build mlbparks-pipeline-1 -n ${GUID}-jenkins
+oc new-build ${REPO} --name=nationalparks-pipeline --strategy=pipeline --context-dir=./Nationalparks -l app=pipeline -n ${GUID}-jenkins
+oc env bc/nationalparks-pipeline GUID=${GUID} CLUSTER=${CLUSTER} -n ${GUID}-jenkins
+oc cancel-build nationalparks-pipeline-1 -n ${GUID}-jenkins
+oc new-build ${REPO} --name=parksmap-pipeline --strategy=pipeline --context-dir=./ParksMap -l app=pipeline -n ${GUID}-jenkins
+oc env bc/parksmap-pipeline GUID=${GUID} CLUSTER=${CLUSTER} -n ${GUID}-jenkins
+oc cancel-build parksmap-pipeline-1 -n ${GUID}-jenkins
 
 
 

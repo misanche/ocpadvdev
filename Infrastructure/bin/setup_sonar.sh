@@ -21,6 +21,6 @@ oc project ${GUID}-sonarqube
 
 # Code to set up the SonarQube project.
 # Ideally just calls a template
-oc new-app -f ./Infrastructure/templates/sonarqube_db.yaml
-oc new-app -f ./Infrastructure/templates/sonarqube.yaml
+oc new-app -f ./Infrastructure/templates/sonarqube_db.yaml -n ${GUID}-parks-prod
+oc new-app -f ./Infrastructure/templates/sonarqube.yaml -n ${GUID}-parks-prod
 # To be Implemented by Student
