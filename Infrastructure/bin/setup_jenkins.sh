@@ -33,7 +33,7 @@ oc project ${GUID}-jenkins
 oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-jenkins
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-jenkins
 # Create the Jenkins app
-oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
+oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=3Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
 
 while : ; do
     echo "Checking if Jenkins is Ready..."
