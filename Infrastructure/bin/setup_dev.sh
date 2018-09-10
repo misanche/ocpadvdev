@@ -19,6 +19,7 @@ oc project ${GUID}-parks-dev
 echo "Set Permissions"
 oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-parks-dev
 oc policy add-role-to-user view --serviceaccount=default
+oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins
 echo "Create mongodb from template"
 oc new-app -f ./Infrastructure/templates/mongodb_dev.yaml
 echo "create mongodb configmap"

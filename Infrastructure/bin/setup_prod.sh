@@ -19,6 +19,7 @@ echo "Grant permissions"
 oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-parks-prod
 oc policy add-role-to-user system:image-puller system:serviceaccounts:${GUID}-parks-prod -n ${GUID}-parks-dev
 oc policy add-role-to-user view --serviceaccount=default
+oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins
 
 echo "Create MongoDB"
 oc new-app -f ./Infrastructure/templates/mongodb_prod.yaml

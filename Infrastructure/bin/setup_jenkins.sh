@@ -31,6 +31,7 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 oc project ${GUID}-jenkins
 # Add roles to jenkins user in ${GUID}-jenkins
 oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-jenkins
+oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins
 # Create the Jenkins app
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
 # Create custom Jenkins Slave pod
