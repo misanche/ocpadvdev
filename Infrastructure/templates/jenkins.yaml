@@ -177,7 +177,7 @@ objects:
       template: jenkins-persistent-template
     name: jenkins
   spec:
-    host: jenkins-7077-jenkins.apps.na39.openshift.opentlc.com
+    host: jenkins-d312-jenkins.apps.na39.openshift.opentlc.com
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge

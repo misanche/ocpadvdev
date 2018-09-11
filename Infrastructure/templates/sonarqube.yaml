@@ -149,7 +149,7 @@ objects:
       app: sonarqube
     name: sonarqube
   spec:
-    host: sonarqube-7077-sonarqube.apps.na39.openshift.opentlc.com
+    host: sonarqube-d312-sonarqube.apps.na39.openshift.opentlc.com
     port:
       targetPort: 9000-tcp
     to:
@@ -163,6 +163,6 @@ objects:
       - lastTransitionTime: 2018-08-21T06:02:21Z
         status: "True"
         type: Admitted
-      host: sonarqube-7077-sonarqube.apps.na39.openshift.opentlc.com
+      host: sonarqube-d312-sonarqube.apps.na39.openshift.opentlc.com
       routerName: router
       wildcardPolicy: None

@@ -159,7 +159,7 @@ objects:
       app: nexus3
     name: nexus-registry
   spec:
-    host: nexus-registry-7077-nexus.apps.na39.openshift.opentlc.com
+    host: nexus-registry-d312-nexus.apps.na39.openshift.opentlc.com
     port:
       targetPort: 5000
     tls:
@@ -175,7 +175,7 @@ objects:
       - lastTransitionTime: 2018-08-20T11:22:21Z
         status: "True"
         type: Admitted
-      host: nexus-registry-7077-nexus.apps.na39.openshift.opentlc.com
+      host: nexus-registry-d312-nexus.apps.na39.openshift.opentlc.com
       routerName: router
       wildcardPolicy: None
 - apiVersion: v1
@@ -189,7 +189,7 @@ objects:
       app: nexus3
     name: nexus3
   spec:
-    host: nexus3-7077-nexus.apps.na39.openshift.opentlc.com
+    host: nexus3-d312-nexus.apps.na39.openshift.opentlc.com
     port:
       targetPort: 8081-tcp
     to:
@@ -203,6 +203,6 @@ objects:
       - lastTransitionTime: 2018-08-20T10:05:41Z
         status: "True"
         type: Admitted
-      host: nexus3-7077-nexus.apps.na39.openshift.opentlc.com
+      host: nexus3-d312-nexus.apps.na39.openshift.opentlc.com
       routerName: router
       wildcardPolicy: None
