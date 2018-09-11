@@ -49,4 +49,4 @@ done
 
 echo "configure now"
 chmod +x ./Infrastructure/bin/nexus_configuration.sh
-./Infrastructure/bin/nexus_configuration.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
+./Infrastructure/bin/nexus_configuration.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}' -n ${GUID}-nexus )
