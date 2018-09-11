@@ -34,7 +34,10 @@ oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-jenkins
 # Create the Jenkins app
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=3Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
+# Create custom Jenkins Slave pod
+cat ./Dockerfile | oc new-build --name=jenkins-slave-appdev --dockerfile=- -n ${GUID}-jenkins
 
+oc set probe dc/jenkins -n $GUID-jenkins --liveness --failure-threshold 8 --initial-delay-seconds 600 -- echo ok
 oc set probe dc/jenkins -n $GUID-jenkins --readiness --failure-threshold 8 --initial-delay-seconds 360 --get-url=http://:8080/login
 
 while : ; do
@@ -44,8 +47,7 @@ while : ; do
     echo "...no. Sleeping 10 seconds."
     sleep 10
 done
-# Create custom Jenkins Slave pod
-cat ./Dockerfile | oc new-build --name=jenkins-slave-appdev --dockerfile=- -n ${GUID}-jenkins
+
 
 #echo "Create pipelines for mlbparks, nationalparks and parksmap"
 #oc create -f ./Infrastructure/templates/pipelines/mlbparks-pipeline.yaml 
