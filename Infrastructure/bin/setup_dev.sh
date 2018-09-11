@@ -43,6 +43,7 @@ oc expose svc mlbparks --labels="type=parksmap-backend" -n ${GUID}-parks-dev
 # Set readiness and liveness probes
 oc set probe dc/mlbparks --liveness --failure-threshold=4 -n ${GUID}-parks-dev --initial-delay-seconds=35 -- echo ok
 oc set probe dc/mlbparks --readiness --get-url=http://:8080/ws/healthz/ --failure-threshold=4 --initial-delay-seconds=60 -n ${GUID}-parks-dev
+oc set deployment-hook dc/mlbparks -n ${GUID}-parks-dev --post -- curl -s http://mlbparks:8080/ws/data/load/ 
 
 echo "Create Nationalparks"
 oc new-build --binary=true --allow-missing-images=true --image-stream=redhat-openjdk18-openshift:1.2 --name=nationalparks -l app=nationalparks -n ${GUID}-parks-dev
@@ -62,6 +63,7 @@ oc expose svc nationalparks -l "type=parksmap-backend" -n ${GUID}-parks-dev
 # Liveness and probes 
 oc set probe dc/nationalparks --liveness --failure-threshold=4 -n ${GUID}-parks-dev --initial-delay-seconds=35 -- echo ok
 oc set probe dc/nationalparks --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url='http://:8080/ws/healthz/' -n ${GUID}-parks-dev
+oc set deployment-hook dc/nationalparks -n ${GUID}-parks-dev --post -- curl -s http://mlbparks:8080/ws/data/load/ 
 
 echo "Create ParksMap"
 # Create the bc

@@ -66,7 +66,7 @@ oc patch dc/mlbparks-green -p='{"spec": {"strategy": {"type": "Recreate"}}}' -n 
 oc expose dc mlbparks-green --port 8080 -n ${GUID}-parks-prod
 oc set probe dc/mlbparks-green --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/mlbparks-green --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
-
+oc set deployment-hook dc/mlbparks-green -n ${GUID}-parks-prod --post -- curl -s http://mlbparks:8080/ws/data/load/ 
 
 echo "Create Blue"
 oc new-app ${GUID}-parks-prod/mlbparks:0.0 -l app=mlbparks-blue  --allow-missing-imagestream-tags=true --allow-missing-images=true --name=mlbparks-blue -n ${GUID}-parks-prod
@@ -90,6 +90,8 @@ oc set env dc/nationalparks-green --from=configmap/nationalparks-green-configmap
 oc expose dc nationalparks-green --port 8080 -n ${GUID}-parks-prod
 oc set probe dc/nationalparks-green --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/nationalparks-green --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
+oc set deployment-hook dc/nationalparks-green -n ${GUID}-parks-prod --post -- curl -s http://mlbparks:8080/ws/data/load/ 
+
 echo "Create Blue"
 oc new-app ${GUID}-parks-prod/nationalparks:0.0  -l app=nationalparks-blue --allow-missing-imagestream-tags=true --allow-missing-images=true --name=nationalparks-blue -n ${GUID}-parks-prod
 oc set triggers dc/nationalparks-blue --remove-all -n ${GUID}-parks-prod
@@ -112,6 +114,7 @@ oc set env dc/parksmap-green --from=configmap/parksmap-green-configmap -n ${GUID
 oc expose dc parksmap-green --port 8080 -n ${GUID}-parks-prod
 oc set probe dc/parksmap-green --liveness --failure-threshold=4 -n ${GUID}-parks-prod --initial-delay-seconds=35 -- echo ok
 oc set probe dc/parksmap-green --readiness --failure-threshold=4 --initial-delay-seconds=60 --get-url="http://:8080/ws/healthz/" -n ${GUID}-parks-prod
+
 echo "Create Blue"
 oc new-app ${GUID}-parks-prod/parksmap:0.0  -l app=parksmap-blue --allow-missing-imagestream-tags=true --allow-missing-images=true --name=parksmap-blue -n ${GUID}-parks-prod
 oc set triggers dc/nationalparks-blue --remove-all -n ${GUID}-parks-prod
