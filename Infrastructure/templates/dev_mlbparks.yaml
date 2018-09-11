@@ -106,7 +106,7 @@ objects:
             value: XpBIMUjl
           - name: AUTO_DEPLOY_EXPLODED
             value: "false"
-          image: docker-registry.default.svc:5000/7077-parks-dev/mlbparks@sha256:4798df9d542cc8a91d17da1140480819d2df9e9b869bc3c5b909072b626e566e
+          image: docker-registry.default.svc:5000/d312-parks-dev/mlbparks@sha256:4798df9d542cc8a91d17da1140480819d2df9e9b869bc3c5b909072b626e566e
           imagePullPolicy: Always
           livenessProbe:
             exec:
@@ -159,7 +159,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: mlbparks:latest
-          namespace: 7077-parks-dev
+          namespace: d312-parks-dev
       type: ImageChange
     - type: ConfigChange
   status:
@@ -184,7 +184,7 @@ objects:
       xpaas: 1.4.8
     name: mlbparks
   spec:
-    host: mlbparks-7077-parks-dev.apps.na39.openshift.opentlc.com
+    host: mlbparks-d312-parks-dev.apps.na39.openshift.opentlc.com
     to:
       kind: Service
       name: mlbparks
@@ -196,7 +196,7 @@ objects:
       - lastTransitionTime: 2018-08-22T07:00:33Z
         status: "True"
         type: Admitted
-      host: mlbparks-7077-parks-dev.apps.na39.openshift.opentlc.com
+      host: mlbparks-d312-parks-dev.apps.na39.openshift.opentlc.com
       routerName: router
       wildcardPolicy: None
 - apiVersion: v1
@@ -219,7 +219,7 @@ objects:
     - annotations: null
       from:
         kind: DockerImage
-        name: docker-registry.default.svc:5000/7077-parks-dev/mlbparks:latest
+        name: docker-registry.default.svc:5000/d312-parks-dev/mlbparks:latest
       generation: null
       importPolicy: {}
       name: latest
